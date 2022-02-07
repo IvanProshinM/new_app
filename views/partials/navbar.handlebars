@@ -1,0 +1,15 @@
+<div class="masthead">
+    <h3 class="text-muted">РЕГИСТРАТУРА</h3>
+    <nav>
+        <ul class="nav nav-justified">
+            <li class="active"><a href="/">Дом</a></li>
+            {{#if isAuthenticated}}
+                <li><a href="/users/dashboard">Приборная панель</a></li>
+                <li><a href="/users/logout">Выход из системы</a></li>
+            {{else}}
+                <li><a href="/users/register">Зарегистрироваться</a></li>
+                <li><a href="/users/login">Войти в систему</a></li>
+            {{/if}}
+        </ul>
+    </nav>
+</div>
