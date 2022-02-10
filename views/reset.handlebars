@@ -1,0 +1,14 @@
+<form class="form-signin" action="/users/reset" method="POST">
+
+    <h2 class="form-signin-heading">Сбрасываем пароль</h2>
+
+    <label for="inputPassword" class="sr-only">Пароль</label>
+    <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+    <br/>
+    <label for="inputConfirmPassword" class="sr-only">Подтвердите пароль</label>
+    <input type="password" id="inputConfirmPassword" name="confirmationPassword" class="form-control"
+           placeholder="Confirm Password" required>
+    <input value="{{hash}}" type="hidden" name="passwordResetHash">
+    <br/>
+    <button class="btn btn-lg btn-default btn-block" type="submit">Сохранить пароль</button>
+</form>

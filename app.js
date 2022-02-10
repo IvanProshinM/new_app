@@ -8,7 +8,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const mongoose = require('mongoose')
 const passport = require('passport')
-
+const nodemon = require('nodemon')
 /*require('./config/passport')*/
 
 mongoose.Promise = global.Promise //что ето ?? (пишет, что настройка mongoose, круто, но что это ???
@@ -53,7 +53,6 @@ app.use((req, res, next) => {
 
 app.use('/', require('./routes/index'))
 app.use('/users', require('./routes/users'))
-
 // 6 Промежуточное ПО для обработки ошибок 404. Данное промежуточное ПО начинает действовать, если запрос не соответствует никакому из
 // вышеуказанных промежуточному ПО.
 app.use((req, res, next) => {
