@@ -14,7 +14,8 @@ const userSchema = new Schema({
     password: String,
     activateHash: String,
     activatedAt: String,
-    passwordResetHash: String
+    passwordResetHash: String,
+    id: String
 }, {
 
 
@@ -56,6 +57,7 @@ module.exports.hashActive = async (activateHash) => {
 }
 
 
+/*
 let transpoter = nodemailer.createTransport({
     host: 'smtp.yandex.ru',
     port: 465,
@@ -65,3 +67,4 @@ let transpoter = nodemailer.createTransport({
         pass: 'onphovhouktqjlfl',
     },
 })
+*/

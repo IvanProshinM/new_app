@@ -9,8 +9,7 @@ const {hashPassword} = require("../models/user");
 const http = require('http');
 const url = require('url');
 const nodemailer = require('nodemailer');
-const LocalStrategy = require('passport-local').Strategy
-
+const LocalStrategy = require('passport-local').Strategy;
 
 
 //validation schema
@@ -59,40 +58,34 @@ router.route('/login')
     })
     .post(async (req, res, next) => {
         try {
-
             const result = Joi.validate(req.body, loginSchema)
             if (result.error) {
                 req.flash('error', 'Хуйня, вводи снова и правильно')
                 res.redirect('login')
             }
-
-            const user = await User.findOne({'email': result.value.email});
-            /*console.log(user)*/
-            if (user == null) {
-                req.flash('error', 'Нет такого пользователя.')
-                return res.redirect('/users/login')
-            }
-
-            console.log(req.body.password)
-            let newpass = await hashPassword(req.body.password)
-
-
-            /* let vadik = new Date().toLocaleDateString()
-             let hash = crypto.createHash('md5').update(vadik).digest('hex');
-             console.log("Сюда смотри!",hash)*/
-
-
-            const isValidPassword = await bcrypt.compare(req.body.password, user.password)
-            console.log(isValidPassword);
-            if (isValidPassword === true) {
-                req.flash('success', 'Вы успешно авторизовались')
-                res.redirect('http://localhost:5000/')
-            } else {
-                req.flash('error', 'Пароль неверный')
-                res.redirect('/users/login')
-            }
-
-
+            passport.use(new LocalStrategy({
+                    usernameField: 'email',
+                    passwordField: 'password',
+                },
+                function (email, password, done) {
+                    User.findOne({'email': email}, function (err, user) {
+                        if (err) return done(err)
+                        if (!user) {
+                            req.flash('error', 'Такого пользователя не существует')
+                            res.redirect('login')
+                            return done(null, false);
+                        }
+                        if (!user.verifyPassword(password)) {
+                            req.flash('error', 'Пароль неверный')
+                            res.redirect('login')
+                            return done(null, false);
+                        }
+                        req.flash('success', 'Пользователь успешно авторизован!')
+                        res.redirect('login')
+                        return done(null, user)
+                    })
+                }
+            ))
         } catch (error) {
             next(error)
         }
