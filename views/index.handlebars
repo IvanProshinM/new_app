@@ -3,4 +3,12 @@
     <h1>Сайт регистратуры</h1>
     <p class="lead">Талонов нет, блять, и не будет!</p>
     <a class="btn btn-lg btn-default btn-block" href="/staff">Наш персонал</a>
+
+    {{#if isAuthenticated}}
+        </br>
+        </br>
+        <p class="kit">КОТЕКА ВИДЯТ ТОЛЬКО АВТОРИЗОВАННЫЕ ПОЛЬЗОВАТЕЛИ!</p>
+        <img class="img_pos" src="/img/authorized-kit.jpg" alt="">
+    {{else}}
+    {{/if}}
 </div>

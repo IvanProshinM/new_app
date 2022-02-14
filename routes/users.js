@@ -56,41 +56,14 @@ router.route('/login')
     .get((req, res) => {
         res.render('login')
     })
-    .post(async (req, res, next) => {
-        try {
-            const result = Joi.validate(req.body, loginSchema)
-            if (result.error) {
-                req.flash('error', 'Хуйня, вводи снова и правильно')
-                res.redirect('login')
-            }
-            passport.use(new LocalStrategy({
-                    usernameField: 'email',
-                    passwordField: 'password',
-                },
-                function (email, password, done) {
-                    User.findOne({'email': email}, function (err, user) {
-                        if (err) return done(err)
-                        if (!user) {
-                            req.flash('error', 'Такого пользователя не существует')
-                            res.redirect('login')
-                            return done(null, false);
-                        }
-                        if (!user.verifyPassword(password)) {
-                            req.flash('error', 'Пароль неверный')
-                            res.redirect('login')
-                            return done(null, false);
-                        }
-                        req.flash('success', 'Пользователь успешно авторизован!')
-                        res.redirect('login')
-                        return done(null, user)
-                    })
-                }
-            ))
-        } catch (error) {
-            next(error)
-        }
-
+    .post(passport.authenticate('local', {
+        failureRedirect: '/login',
+        failureMessage: true
+    }), async (req, res, next) => {
+        req.flash('success', 'Вы успешно авторизовались!',req.user.username)
+        res.redirect('/')
     })
+
 router.route('/register')
     .get((req, res) => {
         res.render('register')
@@ -214,7 +187,6 @@ router.route('/recovery')
     })
 router.route('/reset')
     .get(async (req, res) => {
-
         const hashGet = req.query['hash']
         console.log('ВТОРОЙ ВАРИАНТ', hashGet)
         try {
@@ -263,6 +235,16 @@ router.route('/reset')
         }
     })
 
+
+router.route('/logout')
+    .get(async (req, res) => {
+        res.render('logout')
+    })
+    .post(async (req,res) => {
+        req.user = null
+        req.flash('success', 'Вы вышли нахуй')
+        res.redirect('/')
+    })
 
 module.exports = router
 

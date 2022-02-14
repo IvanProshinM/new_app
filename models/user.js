@@ -55,16 +55,3 @@ module.exports.hashActive = async (activateHash) => {
         throw new Error('Hashing failed', error)
     }
 }
-
-
-/*
-let transpoter = nodemailer.createTransport({
-    host: 'smtp.yandex.ru',
-    port: 465,
-    secure: 'SSL',
-    auth: {
-        user: 'proshinvanivanoff',
-        pass: 'onphovhouktqjlfl',
-    },
-})
-*/

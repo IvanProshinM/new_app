@@ -5,3 +5,12 @@
     list-style-type: none;
 
 }
+.btn_pos {
+    margin-top: 200px;
+}
+.btn_pos:hover {
+    color: red;
+}
+.kit {
+    text-align: center;
+}

@@ -9,7 +9,7 @@ const session = require('express-session');
 const mongoose = require('mongoose')
 const passport = require('passport')
 const nodemon = require('nodemon')
-/*require('./config/passport')*/
+require('./routes/configPassport')
 
 mongoose.Promise = global.Promise //что ето ?? (пишет, что настройка mongoose, круто, но что это ???
 mongoose.connect('mongodb://localhost:27017/site-auth')
@@ -44,8 +44,9 @@ app.use(flash())
 app.use((req, res, next) => {
     res.locals.success_messages = req.flash('success')
     res.locals.error_messages = req.flash('error')
-
+    res.locals.isAuthenticated = req.user != null;
     next()
+
 })
 
 // 5 Промежуточное ПО для настройки маршрутов. Будет обрабатывать любой запрос, сделанный к пути URL (Uniform Resource Locator -
