@@ -11,6 +11,13 @@
 .btn_pos:hover {
     color: red;
 }
-.kit {
+.kit _text{
     text-align: center;
+    transform: scale(0.5);
 }
+.kit{
+    text-align: center;
+    transform: scale(0.5);
+    margin-top: -300px;
+}
+

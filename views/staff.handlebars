@@ -1,5 +1,5 @@
 <link rel="stylesheet" type="text/css" href="/public/css/style.css">
-<div class="staff-page">
+<!--<div class="staff-page">
     <ol class="staff">
         <li class="staff__part">Ф.И.О</li>
         <ol class="staff">
@@ -47,4 +47,12 @@
             <li class="staff__part">с 29 сентября слушает мою ахинею офисе Садыха.</li>
         </ol>
     </ol>
+</div>-->
+
+<div class="btn__add">
+    {{#if isAuthenticated}}
+        <form class="form-signin" action="/users/addStaff" method="get">
+            <button class="btn btn-lg btn-default btn-block" type="submit"> Добавление сотрудника</button>
+        </form>
+    {{/if}}
 </div>

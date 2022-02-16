@@ -10,7 +10,8 @@ const http = require('http');
 const url = require('url');
 const nodemailer = require('nodemailer');
 const LocalStrategy = require('passport-local').Strategy;
-
+const multer = require('multer');
+const Staff = require('../models/staff')
 
 //validation schema
 
@@ -241,10 +242,29 @@ router.route('/logout')
         res.render('logout')
     })
     .post(async (req,res) => {
-        req.user = null
+       req.logout()
         req.flash('success', 'Вы вышли нахуй')
         res.redirect('/')
     })
+router.route('/addStaff')
+    .get(async (req,res) =>{
+        res.render('addStaff')
+    })
+    .post(async (req,res) => {
+/*        try {
+            const result = Joi.validate(req.body, staffSchema)
 
+            if (result.error) {
+                req.flash('error', 'Data entered is not valid. Please try again.')
+                res.redirect('/users/addStaff')
+            }
+            console.log(req.body)
+        } catch (error) {
+            next(error)
+        }*/
+        const newStaff = await new Staff(req.body)
+        await newStaff.save()
+        console.log(req.body)
+    })
 module.exports = router
 

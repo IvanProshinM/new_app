@@ -9,6 +9,7 @@ const session = require('express-session');
 const mongoose = require('mongoose')
 const passport = require('passport')
 const nodemon = require('nodemon')
+const multer = require('multer')
 require('./routes/configPassport')
 
 mongoose.Promise = global.Promise //что ето ?? (пишет, что настройка mongoose, круто, но что это ???
@@ -22,10 +23,22 @@ app.engine('handlebars', expressHandlebars({defaultLayout: 'layout'}))
 app.set('view engine', 'handlebars');
 
 // 3 Вы настроили промежуточное ПО для bodyparser, cookie, session и passport. Passport будет использоваться, когда пользователи хотят войти в приложение.
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/img')
+    },
+    filename: function (req, file, cb) {
+        file.filename = 'kit'
+        cb(null, file.filename + '.png')
+    }
+})
+const upload = multer({storage:storage})
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(multer({storage:storage}).single('filedata'))
 app.use(session({
     cookie: { maxAge: 60000 },
     secret: 'codeworkrsecret',
@@ -61,3 +74,4 @@ app.use((req, res, next) => {
 })
 // 7 Сервер настраивается на прослушивание запросов по 5000 порту.
     app.listen(5000, () => console.log('Server started listening on port 5000!'))
+

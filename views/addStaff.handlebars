@@ -1,0 +1,20 @@
+<h1>Добавление нового сотрудника</h1>
+</br>
+</br>
+<form class="form-signin" action="/users/addStaff" method="POST">
+    <p>Введите ФИО сотрудника</p>
+    <label for="inputFullName" class="sr-only"></label>
+    <input type="text" id="inputFullName" name="fullName" class="form-control" placeholder="fullname" required
+           autofocus>
+    </br>
+    <p>Введите должность сотрудника</p>
+    <label for="inputPosition" class="sr-only">Введите должность сотрудника</label>
+    <input type="text" id="inputPosition" name="position" class="form-control" placeholder="position" required>
+    </br>
+    <p>Введите стаж сотрудника</p>
+    <label for="inputWorkExperience" class="sr-only">Введите стаж сотрудника</label>
+    <input type="text" id="inputWorkExperience" name="workExperience" class="form-control" placeholder="workExperience"
+           required>
+    </br>
+    <button class="btn btn-lg btn-default btn-block" type="submit">Добавить сотрудника</button>
+</form>

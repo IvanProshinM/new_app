@@ -25,17 +25,20 @@ const userSchema = new Schema({
         createdAt: 'createdAt',
         updatedAt: 'updatedAt'
     },
-/*
-    validateHash: {
-        activateHash: String,
-        activatedAt: String
-    }*/
+    /*
+        validateHash: {
+            activateHash: String,
+            activatedAt: String
+        }*/
 })
 
 // 4 Определяется модель, и результат присваивается константе под названием User, которая потом экспортируется в качестве модуля.
 // Поэтому ее можно использовать в других частях приложения.
 const User = mongoose.model('user', userSchema)
 module.exports = User
+
+/*const Staff = mongoose.model('staff', userSchema)
+module.exports = Staff*/
 
 
 module.exports.hashPassword = async (password) => {
