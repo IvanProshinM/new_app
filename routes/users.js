@@ -272,7 +272,6 @@ router.route('/addStaff')
             await newStaff.save()
             req.flash('success', 'Сотрудник добавлен')
             res.redirect('/staff')
-
             let filedata = req.file;
             console.log(filedata);
             if (!filedata) {

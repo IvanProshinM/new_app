@@ -29,11 +29,11 @@ const storage = multer.diskStorage({
         cb(null, './public/img')
     },
     filename: function (req, file, cb) {
-        file.filename = 'kit'
+        file.filename = req.id
         cb(null, file.filename + '.png')
     }
 })
-const upload = multer({storage:storage})
+/*const upload = multer({storage:storage})*/
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
