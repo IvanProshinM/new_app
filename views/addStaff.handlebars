@@ -1,7 +1,7 @@
 <h1>Добавление нового сотрудника</h1>
 </br>
 </br>
-<form class="form-signin" action="/users/addStaff" method="POST">
+<form class="form-signin" action="/users/addStaff" method="POST" enctype="multipart/form-data">
     <p>Введите ФИО сотрудника</p>
     <label for="inputFullName" class="sr-only"></label>
     <input type="text" id="inputFullName" name="fullName" class="form-control" placeholder="fullname" required
@@ -16,5 +16,8 @@
     <input type="text" id="inputWorkExperience" name="workExperience" class="form-control" placeholder="workExperience"
            required>
     </br>
+
+     <input type="file" name="filedata"/>
+
     <button class="btn btn-lg btn-default btn-block" type="submit">Добавить сотрудника</button>
 </form>

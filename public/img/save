@@ -1,0 +1,23 @@
+/*router.route('/addStaff')
+    .get(async (req, res) => {
+        res.render('addStaff')
+    })
+    .post(upload.single('filedata'), async (req, res, next) => {
+        try {
+            const result = await staffSchema.validateAsync(req.body)
+            const newStaff = await new Staff(result)
+            await newStaff.save()
+            req.flash('success', 'Сотрудник добавлен')
+            res.redirect('/staff')
+        } catch (error) {
+            if (error instanceof ValidationError) {
+                const errorMessage = error.message
+                req.flash('error', 'Data entered is not valid. Ошибка такая -' + errorMessage)
+                return res.redirect('/users/addStaff')
+            }
+            console.log(error)
+            next(error)
+        }
+
+
+    })*/

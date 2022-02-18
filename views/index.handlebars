@@ -2,14 +2,11 @@
 <div class="jumbotron">
     <h1>Сайт регистратуры</h1>
     <p class="lead">Талонов нет, блять, и не будет!</p>
-    <a class="btn btn-lg btn-default btn-block" href="/staff">Наш персонал</a>
+    <a class="btn btn-lg btn-default btn-block" href="/users/staff">Наш персонал</a>
 
     {{#if isAuthenticated}}
         <p class="kit_text">КОТЕКА ВИДЯТ ТОЛЬКО АВТОРИЗОВАННЫЕ ПОЛЬЗОВАТЕЛИ!</p>
-       <!-- <form action="/uploads" method="post" enctype="multipart/form-data">
-            <input type="file" name="filedata"/>
-            <input type="submit" value="Send"/>
-        </form>-->
+
             <img  class="kit" src="./img/kit.png" alt="">
     {{else}}
     {{/if}}

@@ -7,6 +7,7 @@ const expressHandlebars = require('express-handlebars');
 const flash = require('connect-flash');
 const session = require('express-session');
 const mongoose = require('mongoose')
+const MongoStore = require('connect-mongo')
 const passport = require('passport')
 const nodemon = require('nodemon')
 const multer = require('multer')
@@ -40,10 +41,13 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(multer({storage:storage}).single('filedata'))
 app.use(session({
-    cookie: { maxAge: 60000 },
+    cookie: { maxAge: 3600000 },
     secret: 'codeworkrsecret',
     saveUninitialized: false,
-    resave: false
+    resave: false,
+    store: MongoStore.create({
+        mongoUrl:'mongodb://localhost:27017/site-auth'
+    })
 }));
 
 app.use(passport.initialize())

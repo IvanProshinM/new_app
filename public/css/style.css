@@ -5,19 +5,39 @@
     list-style-type: none;
 
 }
+
 .btn_pos {
     margin-top: 200px;
 }
+
 .btn_pos:hover {
     color: red;
 }
-.kit _text{
+
+.kit_text {
     text-align: center;
     transform: scale(0.5);
 }
-.kit{
+
+.kit {
     text-align: center;
     transform: scale(0.5);
     margin-top: -300px;
 }
 
+.staff__list {
+    font-size: 16px;
+    font-family: sans-serif;
+    text-decoration: none;
+    list-style-type: none;
+
+}
+.staff__item {
+    text-decoration: none;
+    list-style-type: none;
+
+}
+.staff__title{
+    font-weight: bold;
+    font-style: italic;
+}

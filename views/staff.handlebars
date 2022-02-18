@@ -1,53 +1,16 @@
 <link rel="stylesheet" type="text/css" href="/public/css/style.css">
-<!--<div class="staff-page">
-    <ol class="staff">
-        <li class="staff__part">Ф.И.О</li>
-        <ol class="staff">
-            <li class="staff__part">Ишметов Владислав Александрович</li>
-        </ol>
+<div class="staff-page">
+    <br class="staff__list">
+        {{#each  staffList}}
+            <li class=staff__item><span class="staff__title">ФИО - </span>{{this.fullName}}</li>
+            <li class=staff__item><span class="staff__title">Должность - </span>{{this.position}}</li>
+            <li class=staff__item><span class="staff__title">Стаж - </span>{{this.workExperience}}</li>
+            <img src="/img/">
+            </br>
+        {{/each }}
 
-        <li class="staff__part">Должность:</li>
-        <ol class="staff">
-            <li class="staff__part">Врач психиатр, психотерапевт</li>
-        </ol>
-        <li class="staff__part">Стаж:</li>
-        <ol class="staff">
-            <li class="staff__part">с 29 сентября несет ахинею при мне в офисе Садыха.</li>
-        </ol>
-    </ol>
-    <br/>
-    <ol class="staff">
-        <li class="staff__part">Ф.И.О</li>
-        <ol class="staff">
-            <li class="staff__part">Садыхов Садых Нурадинович</li>
-        </ol>
-
-        <li class="staff__part">Должность:</li>
-        <ol class="staff">
-            <li class="staff__part">Главврач, главесть, главспать</li>
-        </ol>
-        <li class="staff__part">Стаж:</li>
-        <ol class="staff">
-            <li class="staff__part">с 29 сентября слушает мою ахинею офисе Садыха.</li>
-        </ol>
-    </ol>
-    <br/>
-    <ol class="staff">
-        <li class="staff__part">Ф.И.О</li>
-        <ol class="staff">
-            <li class="staff__part">Садыхов Садых Нурадинович</li>
-        </ol>
-
-        <li class="staff__part">Должность:</li>
-        <ol class="staff">
-            <li class="staff__part">Главврач, главесть, главспать</li>
-        </ol>
-        <li class="staff__part">Стаж:</li>
-        <ol class="staff">
-            <li class="staff__part">с 29 сентября слушает мою ахинею офисе Садыха.</li>
-        </ol>
-    </ol>
-</div>-->
+    </ul>
+</div>
 
 <div class="btn__add">
     {{#if isAuthenticated}}

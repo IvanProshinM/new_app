@@ -15,7 +15,6 @@ const userSchema = new Schema({
     activateHash: String,
     activatedAt: String,
     passwordResetHash: String,
-    id: String
 }, {
 
 

@@ -12,6 +12,10 @@ const nodemailer = require('nodemailer');
 const LocalStrategy = require('passport-local').Strategy;
 const multer = require('multer');
 const Staff = require('../models/staff')
+const {array} = require("mongoose/lib/utils");
+const {ValidationError, allow} = require("joi");
+
+const allowUnknown = true
 
 //validation schema
 
@@ -36,6 +40,15 @@ const resetSchema = Joi.object().keys({
     passwordResetHash: Joi.string().required()
 
 })
+
+const staffSchema = Joi.object().keys({
+    fullName: Joi.string().regex(/^[А-яА-Я0-9_ ]{6,100}$/).required(),
+    position: Joi.string().regex(/^[А-яА-Я0-9_ ]{3,100}$/).required(),
+    workExperience: Joi.string().regex(/^[А-яА-Я0-9_ ]{4,20}$/).required(),
+    filedata: Joi.any()
+
+})
+
 /*function piterSalt(pass) {
     const salt = bcrypt.genSalt(10)
     bcrypt.hashSync(pass, salt)
@@ -61,7 +74,7 @@ router.route('/login')
         failureRedirect: '/login',
         failureMessage: true
     }), async (req, res, next) => {
-        req.flash('success', 'Вы успешно авторизовались!',req.user.username)
+        req.flash('success', 'Вы успешно авторизовались!', req.user.username)
         res.redirect('/')
     })
 
@@ -241,30 +254,62 @@ router.route('/logout')
     .get(async (req, res) => {
         res.render('logout')
     })
-    .post(async (req,res) => {
-       req.logout()
+    .post(async (req, res) => {
+        req.logout()
         req.flash('success', 'Вы вышли нахуй')
         res.redirect('/')
     })
+
+
 router.route('/addStaff')
-    .get(async (req,res) =>{
+    .get(async (req, res) => {
         res.render('addStaff')
     })
-    .post(async (req,res) => {
-/*        try {
-            const result = Joi.validate(req.body, staffSchema)
+    .post(async (req, res, next) => {
+        try {
+            const result = await staffSchema.validateAsync(req.body)
+            const newStaff = await new Staff(result)
+            await newStaff.save()
+            req.flash('success', 'Сотрудник добавлен')
+            res.redirect('/staff')
 
-            if (result.error) {
-                req.flash('error', 'Data entered is not valid. Please try again.')
-                res.redirect('/users/addStaff')
+            let filedata = req.file;
+            console.log(filedata);
+            if (!filedata) {
+                return  res.send('Ошибка при загрузке файла');
+            } else {
+                return res.send('Файл загружен')
             }
-            console.log(req.body)
+
+
         } catch (error) {
+            if (error instanceof ValidationError) {
+                const errorMessage = error.message
+                req.flash('error', 'Data entered is not valid. Ошибка такая -' + errorMessage)
+                return res.redirect('/users/addStaff')
+            }
+            console.log(error)
             next(error)
-        }*/
-        const newStaff = await new Staff(req.body)
-        await newStaff.save()
-        console.log(req.body)
+        }
+
+
     })
+
+router.route('/staff')
+    .get(async (req, res) => {
+        const staffList = await Staff.find().lean()
+        console.log(staffList)
+        staffList.forEach(item => {
+            console.log(item.fullName)
+            console.log(item.position)
+            console.log(item.workExperience)
+        })
+        res.render('staff', {
+            "staffList": staffList
+        })
+    })
+/*    .post(async(req, res) => {
+
+    })*/
 module.exports = router
 
