@@ -15,6 +15,8 @@ require('./routes/configPassport')
 const paginate = require('express-paginate');
 const {hashPassword, hashActive} = require("./models/user");
 const {middleware} = require("express-paginate");
+let paginateHelper = require('express-handlebars-paginate')
+const {createPagination} = require("express-handlebars-paginate");
 
 mongoose.Promise = global.Promise //что ето ?? (пишет, что настройка mongoose, круто, но что это ???
 mongoose.connect('mongodb://localhost:27017/site-auth')
@@ -23,7 +25,13 @@ const app = express();
 app.use(morgan('dev'))
 // 2 Происходит настройка промежуточного ПО, которое будет заниматься представлениями. Для создания представлений вы будете использовать handlebars.
 app.set('views', path.join(__dirname, 'views'))
-app.engine('handlebars', expressHandlebars({defaultLayout: 'layout'}))
+
+const hbsEngine = expressHandlebars({
+    defaultLayout: 'layout', helpers:
+        {paginateHelper: paginateHelper.createPagination}
+});
+
+app.engine('handlebars', hbsEngine)
 app.set('view engine', 'handlebars');
 
 // 3 Вы настроили промежуточное ПО для bodyparser, cookie, session и passport. Passport будет использоваться, когда пользователи хотят войти в приложение.
@@ -36,6 +44,8 @@ const storage = multer.diskStorage({
         cb(null, file.filename + '.png')
     }
 })
+
+
 /*const upload = multer({storage:storage})*/
 
 app.use(bodyParser.json())
@@ -83,5 +93,7 @@ app.use('/users', require('./routes/users'))
 app.use((req, res, next) => {
     res.render('notFound')
 })
+
+
 // 7 Сервер настраивается на прослушивание запросов по 5000 порту.
 app.listen(5000, () => console.log('Server started listening on port 5000!'))

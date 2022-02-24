@@ -3,20 +3,24 @@
 
     {{#each  staffList}}
         <div class="staff__list">
-        <ul class="staff__person">
-            <li class=staff__item><span class="staff__title">ФИО - </span>{{this.fullName}}</li>
-            <li class=staff__item><span class="staff__title">Должность - </span>{{this.position}}</li>
-            <li class=staff__item><span class="staff__title">Стаж - </span>{{this.workExperience}}</li>
-        </ul>
-        {{#if this.imageEx}}
-            <div class="staff__photo">
-                <img src="/img/{{this._id}}.png" class="staff__photo_avatar" alt="">
-            </div>
-        {{/if}}
+            <ul class="staff__person">
+                <li class=staff__item><span class="staff__title">ФИО - </span>{{this.fullName}}</li>
+                <li class=staff__item><span class="staff__title">Должность - </span>{{this.position}}</li>
+                <li class=staff__item><span class="staff__title">Стаж - </span>{{this.workExperience}}</li>
+            </ul>
+            {{#if this.imageEx}}
+                <div class="staff__photo">
+                    <img src="/img/{{this._id}}.png" class="staff__photo_avatar" alt="">
+                </div>
+            {{/if}}
 
-    </div>
+        </div>
         </br>
+        <a  class="link" href="staffChange/{{this._id}}">Редактирование сотрудника </a>
     {{/each }}
+
+    {{{paginateHelper pagination}}}
+
 
 
 </div>
@@ -28,5 +32,12 @@
             <button class="btn btn-lg btn-default btn-block" type="submit"> Добавление сотрудника</button>
         </form>
     {{/if}}
+
+    {{#if isAuthenticated}}
+        </br>
+
+    {{/if}}
+
+
 
 </div>

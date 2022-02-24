@@ -16,6 +16,7 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.17.2",
     "express-handlebars": "^3.0.0",
+    "express-handlebars-paginate": "^1.0.3",
     "express-messages": "^1.0.1",
     "express-paginate": "^1.0.2",
     "express-session": "^1.15.2",

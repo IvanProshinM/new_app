@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 const passport = require('passport');
+const expressHandlebars = require('express-handlebars');
 const crypto = require('crypto');
 const User = require('../models/user');
 const bcrypt = require("bcryptjs");
@@ -17,6 +18,9 @@ const {ValidationError, allow} = require("joi");
 const fs = require('fs')
 const allowUnknown = true
 const paginate = require('express-paginate')
+const paginateHelper = require("express-handlebars-paginate");
+const {createPagination} = require("express-handlebars-paginate");
+const mongoose = require('mongoose')
 
 //validation schema
 
@@ -267,6 +271,8 @@ router.route('/addStaff')
     })
     .post(async (req, res, next) => {
         try {
+
+
             const result = await staffSchema.validateAsync(req.body)
             const newStaff = await new Staff(result)
 
@@ -317,13 +323,69 @@ router.route('/staff')
                 "staffList": staffList,
                 pageCount,
                 itemCount,
-                pages: paginate.getArrayPages(req)(3, pageCount, req.query.page)
+                pages: paginate.getArrayPages(req)(3, pageCount, req.query.page),
+
+                pagination: {
+                    page: currentPage,
+                    limit: req.query.limit,
+                    totalRows: itemCount,
+                    queryParams: req.query.page
+                }
             })
+
 
         } catch (err) {
             next(err)
         }
     })
+
+const ObjectId = require('mongodb').ObjectId;
+
+router.route('/staffChange/:staffId')
+    .get(async (req, res, next) => {
+        const staffId = req.params.staffId
+        const currentUser = await Staff.findById( staffId).lean()
+        console.log(req.params.staffId)
+        console.log(currentUser)
+            res.render('staffChange', {
+                staff: currentUser
+            })
+        }
+    )
+    .post(async (req, res, next) => {
+            try {
+
+                const result = await staffSchema.validateAsync(req.body)
+                const changeStaff = Staff(result)
+                let filedata = req.file;
+                console.log(req.file);
+                const newPath = filedata.destination + '/' + changeStaff.id + '.png'
+                /*  console.log('Новый путь', newPath)*/
+                const oldPath = filedata.path;
+                /* console.log('Старый путь', filedata.path)*/
+                await fs.promises.rename(oldPath, newPath);
+                changeStaff.imageEx = true;
+                changeStaff.createdAt = new Date().toLocaleDateString()
+                await changeStaff.save()
+
+
+            } catch (error) {
+
+                if (error instanceof ValidationError) {
+                    const errorMessage = error.message
+                    req.flash('error', 'Data entered is not valid. Ошибка такая -' + errorMessage)
+                    return res.redirect('/users/addStaff')
+                }
+                if (error instanceof multer.MulterError) {
+                    req.flash()('error', 'Случилась ошибка Multer - проблемы при загрузке')
+                    return res.redirect('/users/addStaff')
+                }
+                next(error);
+
+            }
+        }
+    )
+
 /*    .post(async(req, res) => {
     })*/
 module.exports = router
