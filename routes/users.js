@@ -14,8 +14,9 @@ const multer = require('multer');
 const Staff = require('../models/staff')
 const {array} = require("mongoose/lib/utils");
 const {ValidationError, allow} = require("joi");
-
+const fs = require('fs')
 const allowUnknown = true
+const paginate = require('express-paginate')
 
 //validation schema
 
@@ -52,7 +53,6 @@ const staffSchema = Joi.object().keys({
 /*function piterSalt(pass) {
     const salt = bcrypt.genSalt(10)
     bcrypt.hashSync(pass, salt)
-
 }*/
 
 let transpoter = nodemailer.createTransport({
@@ -269,22 +269,29 @@ router.route('/addStaff')
         try {
             const result = await staffSchema.validateAsync(req.body)
             const newStaff = await new Staff(result)
+
+
+            let filedata = req.file;
+            console.log(req.file);
+            const newPath = filedata.destination + '/' + newStaff.id + '.png'
+            /*  console.log('Новый путь', newPath)*/
+            const oldPath = filedata.path;
+            /* console.log('Старый путь', filedata.path)*/
+            await fs.promises.rename(oldPath, newPath);
+            newStaff.imageEx = true;
+            newStaff.createdAt = new Date().toLocaleDateString()
             await newStaff.save()
             req.flash('success', 'Сотрудник добавлен')
-            res.redirect('/staff')
-            let filedata = req.file;
-            console.log(filedata);
-            if (!filedata) {
-                return  res.send('Ошибка при загрузке файла');
-            } else {
-                return res.send('Файл загружен')
-            }
-
+            return res.redirect('/users/addStaff')
 
         } catch (error) {
             if (error instanceof ValidationError) {
                 const errorMessage = error.message
                 req.flash('error', 'Data entered is not valid. Ошибка такая -' + errorMessage)
+                return res.redirect('/users/addStaff')
+            }
+            if (error instanceof multer.MulterError) {
+                req.flash()('error', 'Случилась ошибка Multer - проблемы при загрузке')
                 return res.redirect('/users/addStaff')
             }
             console.log(error)
@@ -295,20 +302,28 @@ router.route('/addStaff')
     })
 
 router.route('/staff')
-    .get(async (req, res) => {
-        const staffList = await Staff.find().lean()
-        console.log(staffList)
-        staffList.forEach(item => {
-            console.log(item.fullName)
-            console.log(item.position)
-            console.log(item.workExperience)
-        })
-        res.render('staff', {
-            "staffList": staffList
-        })
+    .get(async (req, res, next) => {
+
+        try {
+            const [staffList, itemCount] = await Promise.all([
+                Staff.find({}).limit(req.query.limit).skip(req.skip).lean().exec(),
+                Staff.count({})
+
+            ])
+            const currentPage = req.query.page
+            const pageCount = Math.ceil(itemCount / req.query.limit)
+
+            res.render('staff', {
+                "staffList": staffList,
+                pageCount,
+                itemCount,
+                pages: paginate.getArrayPages(req)(3, pageCount, req.query.page)
+            })
+
+        } catch (err) {
+            next(err)
+        }
     })
 /*    .post(async(req, res) => {
-
     })*/
 module.exports = router
-

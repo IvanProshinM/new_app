@@ -1,21 +1,32 @@
 <link rel="stylesheet" type="text/css" href="/public/css/style.css">
 <div class="staff-page">
-    <br class="staff__list">
-        {{#each  staffList}}
+
+    {{#each  staffList}}
+        <div class="staff__list">
+        <ul class="staff__person">
             <li class=staff__item><span class="staff__title">ФИО - </span>{{this.fullName}}</li>
             <li class=staff__item><span class="staff__title">Должность - </span>{{this.position}}</li>
             <li class=staff__item><span class="staff__title">Стаж - </span>{{this.workExperience}}</li>
-            <img src="/img/">
-            </br>
-        {{/each }}
+        </ul>
+        {{#if this.imageEx}}
+            <div class="staff__photo">
+                <img src="/img/{{this._id}}.png" class="staff__photo_avatar" alt="">
+            </div>
+        {{/if}}
 
-    </ul>
+    </div>
+        </br>
+    {{/each }}
+
+
 </div>
 
 <div class="btn__add">
     {{#if isAuthenticated}}
+        </br>
         <form class="form-signin" action="/users/addStaff" method="get">
             <button class="btn btn-lg btn-default btn-block" type="submit"> Добавление сотрудника</button>
         </form>
     {{/if}}
+
 </div>

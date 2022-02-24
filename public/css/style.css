@@ -30,7 +30,7 @@
     font-family: sans-serif;
     text-decoration: none;
     list-style-type: none;
-
+    display: flex;
 }
 .staff__item {
     text-decoration: none;
@@ -40,4 +40,23 @@
 .staff__title{
     font-weight: bold;
     font-style: italic;
+}
+.staff__photo {
+    display: flex;
+    width: 15%;
+    margin-right: 55%;
+}
+.staff__photo_avatar {
+    width: 100%;
+    height: 100%;
+}
+.staff__person {
+    padding-top: 7%;
+}
+.staff-page {
+    padding-top: 5%;
+}
+.staff__list {
+    justify-content: space-between;
+    height: 33%;
 }

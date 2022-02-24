@@ -12,6 +12,9 @@ const passport = require('passport')
 const nodemon = require('nodemon')
 const multer = require('multer')
 require('./routes/configPassport')
+const paginate = require('express-paginate');
+const {hashPassword, hashActive} = require("./models/user");
+const {middleware} = require("express-paginate");
 
 mongoose.Promise = global.Promise //что ето ?? (пишет, что настройка mongoose, круто, но что это ???
 mongoose.connect('mongodb://localhost:27017/site-auth')
@@ -28,25 +31,25 @@ const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './public/img')
     },
-    filename: function (req, file, cb) {
-        file.filename = req.id
+    filename: async function (req, file, cb) {
+        file.filename = await hashActive(file.originalname + new Date())
         cb(null, file.filename + '.png')
     }
 })
 /*const upload = multer({storage:storage})*/
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({extended: false}))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
-app.use(multer({storage:storage}).single('filedata'))
+app.use(multer({storage: storage}).single('filedata'))
 app.use(session({
-    cookie: { maxAge: 3600000 },
+    cookie: {maxAge: 3600000},
     secret: 'codeworkrsecret',
     saveUninitialized: false,
     resave: false,
     store: MongoStore.create({
-        mongoUrl:'mongodb://localhost:27017/site-auth'
+        mongoUrl: 'mongodb://localhost:27017/site-auth'
     })
 }));
 
@@ -56,12 +59,16 @@ app.use(passport.session())
 // 4 В определенные моменты вы будете отображать флэш-сообщения. Поэтому вам необходимо настроить промежуточное ПО для этого и
 // создать необходимый вам тип флэш-сообщений.
 
+app.use(paginate.middleware(3, 3))
+
 
 app.use(flash())
 app.use((req, res, next) => {
     res.locals.success_messages = req.flash('success')
     res.locals.error_messages = req.flash('error')
     res.locals.isAuthenticated = req.user != null;
+    res.locals.hasPreviousPages = req.query.page > 1
+    res.locals.hasNextPages = req.query.page
     next()
 
 })
@@ -77,5 +84,4 @@ app.use((req, res, next) => {
     res.render('notFound')
 })
 // 7 Сервер настраивается на прослушивание запросов по 5000 порту.
-    app.listen(5000, () => console.log('Server started listening on port 5000!'))
-
+app.listen(5000, () => console.log('Server started listening on port 5000!'))
