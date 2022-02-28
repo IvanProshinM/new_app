@@ -60,3 +60,7 @@
     justify-content: space-between;
     height: 33%;
 }
+.search-link {
+    color: red;
+    text-decoration: underline;
+}

@@ -1,0 +1,23 @@
+<form class="form-signin" action="/search" method="GET">
+    <input type="search" name="searchField" placeholder="Найти сотрудника">
+    <input type="submit" value="Поиск">
+</form>
+
+
+{{#each  search}}
+    <div class="staff__list">
+        <ul class="staff__person">
+            <li class=staff__item><span class="staff__title">ФИО - </span>{{this.fullName}}</li>
+            <li class=staff__item><span class="staff__title">Должность - </span>{{this.position}}</li>
+            <li class=staff__item><span class="staff__title">Стаж - </span>{{this.workExperience}}</li>
+        </ul>
+        {{#if this.imageEx}}
+            <div class="staff__photo">
+                <img src="/img/{{this._id}}.png" class="staff__photo_avatar" alt="">
+            </div>
+        {{/if}}
+
+    </div>
+    </br>
+    <a  class="link" href="staffChange/{{this._id}}">Редактирование сотрудника </a>
+{{/each }}

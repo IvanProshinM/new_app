@@ -88,6 +88,7 @@ app.use((req, res, next) => {
 
 app.use('/', require('./routes/index'))
 app.use('/users', require('./routes/users'))
+app.use('/search', require('./routes/search'))
 // 6 Промежуточное ПО для обработки ошибок 404. Данное промежуточное ПО начинает действовать, если запрос не соответствует никакому из
 // вышеуказанных промежуточному ПО.
 app.use((req, res, next) => {

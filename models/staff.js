@@ -7,7 +7,8 @@ const staffSchema = new Schema({
     position: String,
     workExperience: String,
     imageEx: Boolean,
-    createdAt: String
+    createdAt: String,
+    isActive: Boolean
 })
 
 const Staff = mongoose.model('staff', staffSchema)

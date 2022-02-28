@@ -21,6 +21,7 @@ const paginate = require('express-paginate')
 const paginateHelper = require("express-handlebars-paginate");
 const {createPagination} = require("express-handlebars-paginate");
 const mongoose = require('mongoose')
+const {forEach} = require("mongoose/lib/statemachine");
 
 //validation schema
 
@@ -50,7 +51,8 @@ const staffSchema = Joi.object().keys({
     fullName: Joi.string().regex(/^[А-яА-Я0-9_ ]{6,100}$/).required(),
     position: Joi.string().regex(/^[А-яА-Я0-9_ ]{3,100}$/).required(),
     workExperience: Joi.string().regex(/^[А-яА-Я0-9_ ]{4,20}$/).required(),
-    filedata: Joi.any()
+    filedata: Joi.any(),
+    isActive: Joi.boolean().valid("on")
 
 })
 
@@ -311,9 +313,14 @@ router.route('/staff')
     .get(async (req, res, next) => {
 
         try {
+            let optionsQuery = {}
+            if (req.user == null) {
+                optionsQuery = {isActive: true}
+            }
+
             const [staffList, itemCount] = await Promise.all([
-                Staff.find({}).limit(req.query.limit).skip(req.skip).lean().exec(),
-                Staff.count({})
+                Staff.find(optionsQuery).limit(req.query.limit).skip(req.skip).lean().exec(),
+                Staff.count(optionsQuery)
 
             ])
             const currentPage = req.query.page
@@ -333,7 +340,6 @@ router.route('/staff')
                 }
             })
 
-
         } catch (err) {
             next(err)
         }
@@ -343,10 +349,10 @@ const ObjectId = require('mongodb').ObjectId;
 
 router.route('/staffChange/:staffId')
     .get(async (req, res, next) => {
-        const staffId = req.params.staffId
-        const currentUser = await Staff.findById( staffId).lean()
-        console.log(req.params.staffId)
-        console.log(currentUser)
+            const staffId = req.params.staffId
+            const currentUser = await Staff.findById(staffId).lean()
+            /*console.log(req.params.staffId)
+            console.log(currentUser)*/
             res.render('staffChange', {
                 staff: currentUser
             })
@@ -354,31 +360,35 @@ router.route('/staffChange/:staffId')
     )
     .post(async (req, res, next) => {
             try {
+                const staffId = req.params.staffId
+                console.log(req.body)
+                const validatedData = await staffSchema.validateAsync(req.body)
+                console.log(validatedData)
+                const staff = await Staff.findById(staffId)
 
-                const result = await staffSchema.validateAsync(req.body)
-                const changeStaff = Staff(result)
-                let filedata = req.file;
-                console.log(req.file);
-                const newPath = filedata.destination + '/' + changeStaff.id + '.png'
-                /*  console.log('Новый путь', newPath)*/
-                const oldPath = filedata.path;
-                /* console.log('Старый путь', filedata.path)*/
-                await fs.promises.rename(oldPath, newPath);
-                changeStaff.imageEx = true;
-                changeStaff.createdAt = new Date().toLocaleDateString()
-                await changeStaff.save()
+                staff.fullName = validatedData.fullName
+                staff.position = validatedData.position
+                staff.workExperience = validatedData.workExperience
 
+                if (validatedData.isActive === "on") {
+                    staff.isActive = true
+                } else {
+                    staff.isActive = false
+                }
+                await staff.save()
+                req.flash('success', 'Данные сотрудника успешно изменены')
+                res.redirect('/users/staff')
 
             } catch (error) {
 
                 if (error instanceof ValidationError) {
                     const errorMessage = error.message
                     req.flash('error', 'Data entered is not valid. Ошибка такая -' + errorMessage)
-                    return res.redirect('/users/addStaff')
+                    return res.redirect('/users/staffChange')
                 }
                 if (error instanceof multer.MulterError) {
                     req.flash()('error', 'Случилась ошибка Multer - проблемы при загрузке')
-                    return res.redirect('/users/addStaff')
+                    return res.redirect('/users/staffChange')
                 }
                 next(error);
 
@@ -388,4 +398,6 @@ router.route('/staffChange/:staffId')
 
 /*    .post(async(req, res) => {
     })*/
+
+
 module.exports = router

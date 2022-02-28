@@ -1,7 +1,7 @@
 <h1>Изменение данных о сотруднике</h1>
 </br>
 </br>
-<form class="form-signin" action="/users/addStaff" method="POST" enctype="multipart/form-data">
+<form class="form-signin" action="/users/staffChange/{{staff._id}}" method="POST" enctype="multipart/form-data">
     <!--    <p>Введите ФИО сотрудника</p>-->
     <label for="inputFullName" class="sr-only"></label>
     <input type="text" id="inputFullName" name="fullName" class="form-control"
@@ -22,5 +22,13 @@
     <p>Изменить фото сотрудника</p>
     <input type="file" name="filedata"/>
     </br>
+
+    {{#if staff.isActive}}
+        <input type="checkbox" name="isActive" value="on" checked> Пользователь активен
+    {{else}}
+        <input type="checkbox" name="isActive" value="on" > Пользователь активен
+    {{/if}}
+    </br>
     <button class="btn btn-lg btn-default btn-block" type="submit">Изменить данные сотрудника</button>
+
 </form>
