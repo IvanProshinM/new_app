@@ -21,10 +21,7 @@ router.route('/uploads')
         }
     )
 
-router.route('/staff')
-    .get(async (req, res) => {
-        res.render('staff')
-    })
+
 
 
 module.exports = router

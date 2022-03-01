@@ -309,7 +309,7 @@ router.route('/addStaff')
 
     })
 
-router.route('/staff')
+/*router.route('/staff')
     .get(async (req, res, next) => {
 
         try {
@@ -343,7 +343,7 @@ router.route('/staff')
         } catch (err) {
             next(err)
         }
-    })
+    })*/
 
 const ObjectId = require('mongodb').ObjectId;
 
